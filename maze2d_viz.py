@@ -109,6 +109,8 @@ class Maze2D(object):
         return self.state, int(curr_depth)
 
     def step(self, action_id):
+        state = self.game.get_state()
+        vars1 = state.game_variables
         # Get the observation before taking the action
         curr_depth = get_depth(self.map_design, self.position,
                                self.orientation)
@@ -122,18 +124,12 @@ class Maze2D(object):
         # perform the action in VizDoom
         action = actions[action_id]
         # print("action:", action_id, action)
+        if curr_depth == 1 and action_id == 2:
+            action = [False, 0]
         self.game.make_action(action)
 
         state = self.game.get_state()
         vars = state.game_variables
-
-        # if self.t == 0:
-        #     print(self.pid, self.position, self.orientation)
-        #     map = state.automap_buffer
-        #     if map is not None:
-        #         plt.imshow(map, cmap='gray')
-        #         plt.title(self.pid)
-        #         plt.show()
 
         # Calculate position and orientation after taking the action
         Pposition, Oorientation = get_next_state(
@@ -159,6 +155,13 @@ class Maze2D(object):
 
         self.posterior = np.multiply(curr_likelihood, prior)
         # print(self.t, curr_likelihood, prior)
+        if np.sum(self.posterior) == 0:
+            print(self.t, action, ":", vars1, "->", vars, self.position, self.orientation, Pposition, Oorientation
+                  , self.map_design[int(Position_Y)][int(Position_X)], "distance:", curr_depth)
+            map = state.automap_buffer
+            if map is not None:
+                plt.imshow(map, cmap='gray')
+                plt.show()
 
         # Renormalization of the posterior
         self.posterior /= np.sum(self.posterior)
