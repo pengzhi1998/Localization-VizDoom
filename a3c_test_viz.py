@@ -7,12 +7,13 @@ from collections import deque
 
 
 def test(rank, args, shared_model):
-    print("111111111")
+    print("Test!")
     args.seed = args.seed + rank
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
 
     env = Maze2D(args)
+    env.game_init()
     action_hist_size = args.hist_size
 
     model = Localization_2D_A3C(args)
@@ -28,10 +29,11 @@ def test(rank, args, shared_model):
     best_reward = 0.0
     done = True
 
-    if args.evaluate != 0:
-        test_freq = env.test_mazes.shape[0]
-    else:
-        test_freq = 1000
+    # if args.evaluate != 0:
+    #     test_freq = env.test_mazes.shape[0]
+    # else:
+    #     test_freq = 1000
+    test_freq = 1000
 
     start_time = time.time()
 
