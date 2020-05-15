@@ -1,0 +1,65 @@
+#include "zcommon.acs"
+
+#define TARGET_ID_START 1000 
+#define GOAL_TID 999
+
+// global int 0:reward;
+/* global int 1:goal_x;
+global int 2:goal_y;
+global int 3:goal_z; */
+
+int TARGET_ID_END = TARGET_ID_START;
+int SPAWN_LOC_ID = 0;
+int GOAL_LOC_ID = 0;
+
+script 1 ENTER
+{
+
+	TARGET_ID_END = TARGET_ID_START;
+	while(IsTIDUsed(TARGET_ID_END + 1))
+	{
+		TARGET_ID_END += 1;
+	}
+
+    int a = random(0, 100);
+	// Spawn actor
+	SPAWN_LOC_ID = random(TARGET_ID_START, TARGET_ID_END);
+	SetActorPosition(0, GetActorX(SPAWN_LOC_ID), GetActorY(SPAWN_LOC_ID), 0.0, 0);
+	if (a < 25) {
+	    SetActorAngle(0, 0.);
+	} else if (a < 50) {
+	    SetActorAngle(0, 0.25);
+	} else if (a < 75) {
+	    SetActorAngle(0, 0.5);
+	} else {
+	    SetActorAngle(0, 0.75);
+	}
+	SetActorVelocity(0, 0, 0, 0, FALSE, FALSE);
+	SetActorProperty(0, APROP_SPEED, 0);
+
+	// Wait
+	while(True)
+	{
+	    int buttons = GetPlayerInput(-1, INPUT_BUTTONS);
+	    int angle = GetActorAngle(0) >> 8;
+	    /* the angle in GetActorAngle function and SetActorAngle is
+	    indicated by a number from 0 to 1 */
+	    if(buttons == BT_FORWARD)
+	    {
+	        SetActorProperty(0, APROP_SPEED, 0); /* override the movement made by the actor itself to
+	        avoid imprecise position */
+	        if (angle == 0) { // East
+	            SetActorPosition(0, GetActorX(0) + 6291456, GetActorY(0), 0.0, 0);
+	        } else if(angle == 64) { // North
+	            SetActorPosition(0, GetActorX(0), GetActorY(0) + 6291456, 0.0, 0);
+	        } else if(angle == 128) { // West
+	            SetActorPosition(0, GetActorX(0) - 6291456, GetActorY(0), 0.0, 0);
+	        } else{
+	            SetActorPosition(0, GetActorX(0), GetActorY(0) - 6291456, 0.0, 0);
+	        }
+	    }
+	    // the fixed point representation of a number = that number *65536
+		Delay(1);
+	}
+	// reward += 10.0;
+}
