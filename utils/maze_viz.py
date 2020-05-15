@@ -3,7 +3,10 @@ import numpy.random as npr
 from vizdoom import *
 
 def set_doom_configurations(game, args):
-    game.set_doom_scenario_path(args.path)
+    if args.evaluate == 0:
+        game.set_doom_scenario_path(args.train_path)
+    else:
+        game.set_doom_scenario_path(args.test_path)
 
     # Sets map to start (scenario .wad files can contain many maps). this step is set after initialization
     # game.set_doom_map(args.map_number)

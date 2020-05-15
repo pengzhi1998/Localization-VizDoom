@@ -48,7 +48,8 @@ parser.add_argument('-e', '--evaluate', type=int, default=0,
                     help='0:Train, 1:Evaluate on test data (default: 0)')
 parser.add_argument('-d', '--dump-location', type=str, default="./saved/",
                     help='path to dump models and log (default: ./saved/)')
-parser.add_argument('--path', type=str, default="../VizDoom/7_TRAIN.wad")
+parser.add_argument('--train-path', type=str, default="../VizDoom/7_TRAIN.wad")
+parser.add_argument('--test-path', type=str, default="../VizDoom/7_TEST.wad")
 parser.add_argument('-s', '--sources', type=str,
                     default="../VizDoom/sources/",
                     help='''Test data filepath

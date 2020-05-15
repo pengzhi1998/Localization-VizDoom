@@ -15,13 +15,13 @@ if [ ! -f $ACC ]; then
 fi
 
 for FILE in content/*.acs; do
-	$ACC -i ./acc $FILE "outputs/$(basename ${FILE%.*}).o"
+	$ACC -i ./acc $FILE "../../VizDoom/$(basename ${FILE%.*}).o"
 done
 
 for SIZE in $(seq -s ' ' 7 2 11); do
-	PREFIX="./outputs/sources/$SIZE"
+	PREFIX="../../VizDoom/sources/$SIZE"
 	python maze.py $PREFIX -r $SIZE -c $SIZE -n $NUM_MAZES
-	python wad.py "${PREFIX}_TRAIN" "outputs/${SIZE}_TRAIN.wad" -b outputs/static_goal.o
-	python wad.py "${PREFIX}_TEST" "outputs/${SIZE}_TEST.wad" -b outputs/static_goal.o
+	python wad.py "${PREFIX}_TRAIN" "../../VizDoom/${SIZE}_TRAIN.wad" -b ../../VizDoom/static_goal.o
+	python wad.py "${PREFIX}_TEST" "../../VizDoom/${SIZE}_TEST.wad" -b ../../VizDoom/static_goal.o
 done
 echo "Success."

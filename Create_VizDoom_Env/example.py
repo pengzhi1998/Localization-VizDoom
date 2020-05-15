@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 
 #####################################################################
-# This script presents how to use the most basic features of the environment.
-# It configures the engine, and makes the agent perform random actions.
-# It also gets current state and reward earned with the action.
-# <episodes> number of episodes are played. 
-# Random combination of buttons is chosen for every action.
-# Game variables from state and last reward are printed.
-#
-# To see the scenario description go to "../../scenarios/README.md"
+# an example borrowed from https://github.com/mwydmuch/ViZDoom/blob/master/examples/python/basic.py
+# this implements the most fundamental tasks in localization problems
 #####################################################################
 
 from __future__ import print_function
@@ -33,7 +27,7 @@ if __name__ == "__main__":
     # Sets path to additional resources wad file which is basically your scenario wad.
     # If not specified default maps will be used and it's pretty much useless... unless you want to play good old Doom.
     # game.set_doom_scenario_path("../../scenarios/basic.wad")
-    game.set_doom_scenario_path("../../../NavDoom/outputs/7_TRAIN.wad")
+    game.set_doom_scenario_path("../../VizDoom/7_TRAIN.wad")
     # game.set_doom_scenario_path("../../../vizdoomgymmaze/vizdoomgymmaze/envs/scenarios/four/four_1.wad")
 
     # Sets map to start (scenario .wad files can contain many maps).
