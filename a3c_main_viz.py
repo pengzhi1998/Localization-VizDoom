@@ -29,7 +29,7 @@ parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                     help='learning rate (default: 0.001)')
 parser.add_argument('--num-iters', type=int, default=1000000, metavar='NS',
                     help='''number of training iterations per training thread
-                            (default: 10000000)''')
+                            (default: 1000000)''')
 parser.add_argument('--gamma', type=float, default=0.99, metavar='G',
                     help='discount factor for rewards (default: 0.99)')
 parser.add_argument('--tau', type=float, default=1.00, metavar='T',
