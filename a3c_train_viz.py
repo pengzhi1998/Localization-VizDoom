@@ -41,7 +41,7 @@ def train(rank, args, shared_model): # rank is referring to the serial number of
 
     state, depth = env.reset()
     state = torch.from_numpy(state)
-    while num_iters < args.num_iters/20000:
+    while num_iters < args.num_iters/1000:
         # Sync with the shared model
         model.load_state_dict(shared_model.state_dict())
         if done:

@@ -93,6 +93,40 @@ class Maze2D(object):
 
         # Renormalization of the posterior
         self.posterior /= np.sum(self.posterior)
+
+        # make the gif figures for a defense meeting
+        if self.args.evaluate == 1:
+            for o in state.objects:
+                if o.name == "DoomPlayer":
+                    print(o.position_x,o.position_y)
+                    if int(vars[2]) == 0:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='>', markersize=4)
+                    elif int(vars[2]) == 90:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='^', markersize=4)
+                    elif int(vars[2]) == 180:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='<', markersize=4)
+                    else:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='v', markersize=4)
+            for s in state.sectors:
+                for l in s.lines:
+                    if l.is_blocking:
+                        plt.plot([l.x1, l.x2], [l.y1, l.y2], color='black', linewidth=2)
+            index_list = self.posterior.tolist()
+            max_index = index_list.index(max(index_list))
+            for y in range(0, self.args.map_size+2):
+                for x in range(0, self.args.map_size+2):
+                    if self.posterior[max_index, y, x] != 0:
+                        plt.plot(x * 96 + 48, y * 96 + 48, color='green', marker='s',
+                                 markersize=36, alpha=0.5 * self.posterior[max_index, y, x])
+            if max_index == 0:
+                plt.title("East")
+            elif max_index == 1:
+                plt.title("South")
+            elif max_index == 2:
+                plt.title("West")
+            else:
+                plt.title("North")
+            plt.show()
         self.t = 0
 
         # next state for the policy model
@@ -154,18 +188,60 @@ class Maze2D(object):
         # Posterior = Prior * Likelihood
 
         self.posterior = np.multiply(curr_likelihood, prior)
-        # print(self.t, curr_likelihood, prior)
-        if np.sum(self.posterior) == 0:
-            print(self.t, action, ":", vars1, "->", vars, self.position, self.orientation, Pposition, Oorientation
-                  , self.map_design[int(Position_Y)][int(Position_X)], "distance:", curr_depth)
-            map = state.automap_buffer
-            if map is not None:
-                plt.imshow(map, cmap='gray')
-                plt.show()
+
+        # this is for detecting the errors
+        # if np.sum(self.posterior) == 0:
+        #     print(self.t, action, ":", vars1, "->", vars, self.position, self.orientation, Pposition, Oorientation
+        #           , self.map_design[int(Position_Y)][int(Position_X)], "distance:", curr_depth)
+        #     map = state.automap_buffer
+        #     if map is not None:
+        #         plt.imshow(map, cmap='gray')
+        #         plt.show()
 
         # Renormalization of the posterior
         self.posterior /= np.sum(self.posterior)
-        # self.posterior /= 1
+
+        # make the gif figures for a defense meeting
+        if self.args.evaluate == 1:
+            for o in state.objects:
+                if o.name == "DoomPlayer":
+                    print(o.position_x,o.position_y)
+                    if int(vars[2]) == 0:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='>', markersize=4)
+                    elif int(vars[2]) == 90:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='^', markersize=4)
+                    elif int(vars[2]) == 180:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='<', markersize=4)
+                    else:
+                        plt.plot(o.position_x, o.position_y, color='red', marker='v', markersize=4)
+            for s in state.sectors:
+                for l in s.lines:
+                    if l.is_blocking:
+                        plt.plot([l.x1, l.x2], [l.y1, l.y2], color='black', linewidth=2)
+            index_list = self.posterior.tolist()
+            max_index = index_list.index(max(index_list))
+            index = int(int(vars[2])/90)
+            if index == 1:
+                index = 3
+            elif index == 3:
+                index = 1
+            for y in range(0, self.args.map_size+2):
+                for x in range(0, self.args.map_size+2):
+                    if self.posterior[index, y, x] != 0:
+                        print(self.posterior[index, y, x])
+                        plt.plot(x * 96 + 48, y * 96 + 48, color='green', marker='s',
+                                 markersize=36, alpha=0.5 * self.posterior[index, y, x])
+            if max_index == 0:
+                plt.title("step:{},estimate_orientation:East".format(self.t))
+            elif max_index == 1:
+                plt.title("step:{},estimate_orientation:South".format(self.t))
+            elif max_index == 2:
+                plt.title("step:{},estimate_orientation:West".format(self.t))
+            else:
+                plt.title("step:{},estimate_orientation:North".format(self.t))
+            name = "./figures/localization{}.png".format(self.t)
+            plt.savefig(name)
+            plt.show()
 
         # Calculate the reward
         reward = self.posterior.max()
